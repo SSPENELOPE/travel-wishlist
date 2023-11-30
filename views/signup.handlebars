@@ -1,0 +1,41 @@
+<section class="signup-wrapper">
+    <form class="signup-form">
+        <h4 class="text-center">Sign Up</h4>
+        {{!-- Username --}}
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input 
+                type="email" 
+                name="name" 
+                class="form-control w-100" 
+                id="username" 
+                required 
+            />
+        </div>
+        {{!-- Email --}}
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+                type="email" 
+                name="email" 
+                class="form-control w-100" 
+                id="email" 
+                required 
+            />
+        </div>
+        {{!-- Password --}}
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input 
+                type="password" 
+                name="password" 
+                class="form-control w-100" 
+                id="inputPassword4" 
+                required 
+            />
+        </div>
+        <button type="submit" class="btn btn-primary signup">Sign Up</button>
+    </form>
+</section>
+
+<script src="/js/signup.js"></script>

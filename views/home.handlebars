@@ -1,0 +1,61 @@
+<header class="jumbotron text-center">
+    <h1>Vacation Destinations Wishlist</h1>
+    <p>Found exciting places to vist on your next vacation. Use the form below to add them to your wishlist</p>
+</header>
+
+<!-- Form section  -->
+{{#if logged_in}}
+<div class="destinations">
+    <section class="form-section">
+        <!-- Our custom form  -->
+        <form class="custom-form" onsubmit="addDestination(event)">
+            <!-- Destination -->
+            <div class="form-group">
+                <label for="name">Desination Name</label>
+                <input type="text" class="form-control" id="name" placeholder="Enter the name of the destination"
+                    required>
+            </div>
+
+            <!-- Location -->
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" class="form-control" id="location" placeholder="Where is it located?" required>
+            </div>
+
+            <!-- Photo -->
+            <div class="form-group">
+                <label for="photo">Photo</label>
+                <input type="url" class="form-control" id="photo" placeholder="Enter the URL">
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea type="text" class="form-control" id="description"
+                    placeholder="Where is it located?"></textarea>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary submit-button">Submit</button>
+        </form>
+    </section>
+
+    <section class="saved-destinations">
+        <h3>My Wishlist</h3>
+        <div class="info">
+
+        </div>
+    </section>
+
+    <section>
+        <h1>Please log in to use the features of this page</h1>
+    </section>
+    {{/if}}
+
+    <section>
+        <h1 class="text-center">Please <a href="login">log in</a> to use the features of this page</h1>
+    </section>
+</div>
+
+<script src="/js/helper.js"></script>
+<script src="/js/script.js"></script>

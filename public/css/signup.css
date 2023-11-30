@@ -1,0 +1,27 @@
+.signup-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    justify-content: center;
+    background-image: url('https://images.wallpaperscraft.com/image/single/map_road_travel_137025_2560x1440.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.signup-form {
+    width: 40%;
+    height: fit-content;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 1em;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(86, 80, 80, 0.8);
+    justify-self: center;
+    align-self: center;
+}
+
+.form-group label {
+    font-weight: bolder;
+}
