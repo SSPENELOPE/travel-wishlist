@@ -13,7 +13,7 @@ router.post('/signup', async (req, res) => {
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            return res.status(400).json({ error: 'User already exists' });
+            return res.status(400).json({ message: 'User already exists, please log in!' });
         }
 
         // Hash the password
@@ -36,8 +36,6 @@ router.post('/signup', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
-    console.log("login called");
 
     try {
         // Check if the user exists
@@ -63,7 +61,7 @@ router.post('/login', async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
-            // secure: true, // Enable in production with HTTPS
+            secure: true, // Enable in production with HTTPS
         });
 
         // Send a success message

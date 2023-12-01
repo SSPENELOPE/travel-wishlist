@@ -1,25 +1,22 @@
 const router = require('express').Router();
-const path = require('path');
 const User = require('../../models/user');
 const authenticateToken = require('../../middleware/tokenDecode');
 
 router.get('/', authenticateToken, async (req, res) => {
     try {
         if (req.user.userId) {
-
             const userId = req.user.userId;
-         
-            const userWithDestinations = await User.findById(userId);
+
+            // Use Mongoose's populate to retrieve the destinations data
+            const userWithDestinations = await User.findById(userId).populate('destinations');
 
             // Extract destinations from the user object
             const destinations = userWithDestinations.destinations;
 
-            console.log(destinations);
-
             return res.render('home.handlebars', {
                 logged_in: true,
                 user: userWithDestinations.toObject(),  // Pass the user data to the template
-                destinations: destinations.toObject()
+                destinations: destinations.map(destination => destination.toObject()), // Convert each destination to an object
             });
         } else {
             return res.render('home.handlebars', {
@@ -33,17 +30,29 @@ router.get('/', authenticateToken, async (req, res) => {
     }
 });
 
-router.get('/login', (req, res) => {
+router.get('/login', authenticateToken, (req, res) => {
     try {
-        res.render('login.handlebars')
+        if (req.user.userId) {
+            // User is already logged in, redirect to the homepage
+            return res.redirect('/');
+        }
+
+        // User is not logged in, render the login page
+        return res.render('login.handlebars');
     } catch (error) {
-        console.error(error)
-        res.status(500).send('Internal Server Error');
+        console.error(error);
+        return res.status(500).send('Internal Server Error');
     }
 });
 
-router.get('/signup', (req, res) => {
+router.get('/signup', authenticateToken, (req, res) => {
     try {
+        if (req.user.userId) {
+            // User is already logged in, redirect to the homepage
+            return res.redirect('/');
+        }
+
+        // User is not logged in, render the signup page
         res.render('signup.handlebars')
     } catch (error) {
         console.error(error)

@@ -11,12 +11,16 @@ async function getRandomImage(destinationName) {
 
         if (response.ok) {
             const data = await response.json();
-            return data;
+            return data.urls.small;
         } else {
-            return null;
+            return 'https://ceblog.s3.amazonaws.com/wp-content/uploads/2012/05/20172622/ce-travel.jpg';
         }
     } catch (error) {
         console.error('Error fetching image:', error.message);
-        return null;
+        return 'https://ceblog.s3.amazonaws.com/wp-content/uploads/2012/05/20172622/ce-travel.jpg';
     }
 }
+
+module.exports = {
+    getRandomImage,
+};

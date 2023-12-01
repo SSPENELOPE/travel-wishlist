@@ -1,29 +1,39 @@
 const router = require('express').Router();
 const authenticateToken = require('../../middleware/tokenDecode');
 const User = require('../../models/user');
+const imageHandler = require('../../utils/imageHandler');
+const Destination = require('../../models/desitnations');
 
 // Add a destination
 router.post('/addDestination', authenticateToken, async (req, res) => {
     try {
-        const { name, location, photo, description } = req.body;
+        let { name, location, photo, description } = req.body;
 
         const userId = req.user.userId;
-        console.log('User ID:', userId);
-        
-        const newDestination = {
+
+        // If photo is empty, fetch a random image using your imageHandler
+        if (photo === '') {
+            photo = await imageHandler.getRandomImage(name);
+        }
+
+        // Create a new destination document
+        const newDestination = new Destination({
             name,
             location,
             photo,
             description,
-        };
+        });
 
-        // Find the user and push the newDestination into the destinations array
+        // Save the new destination to the destinations collection
+        const savedDestination = await newDestination.save();
+
+        // Find the user and push the ObjectId reference to the new destination into the destinations array
         const user = await User.findById(userId);
-        user.destinations.push(newDestination);
+        user.destinations.push(savedDestination._id);
+
+        // Save the user to update the destinations array
         await user.save();
-        
-        console.log('Saved Destination:', newDestination);
-        
+
         res.status(201).json({ message: 'Destination added successfully' });
     } catch (error) {
         console.error(error);
@@ -32,23 +42,29 @@ router.post('/addDestination', authenticateToken, async (req, res) => {
 });
 
 // Update a destination
-router.put('/updateDestination/:id', async (req, res) => {
+router.put('/updateDestination/:id', authenticateToken, async (req, res) => {
     try {
         const { id } = req.params;
         const { name, location, photo, description } = req.body;
 
-        // Use Mongoose's findByIdAndUpdate to update the destination by ID
-        const updatedDestination = await Destination.findByIdAndUpdate(
-            id,
-            { name, location, photo, description },
-            { new: true } // Returns the updated document
-        );
+        // Find the destination by ID
+        const destination = await Destination.findById(id);
 
-        if (!updatedDestination) {
+        // Check if the destination exists
+        if (!destination) {
             return res.status(404).json({ error: 'Destination not found' });
         }
 
-        return res.status(200).json({ message: 'Destination updated successfully', destination: updatedDestination });
+        // Update the destination fields
+        destination.name = name || destination.name;
+        destination.location = location || destination.location;
+        destination.photo = photo || destination.photo;
+        destination.description = description || destination.description;
+
+        // Save the updated destination
+        await destination.save();
+
+        return res.status(200).json({ message: 'Destination updated successfully' });
     } catch (error) {
         console.error('Error updating destination:', error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -56,19 +72,25 @@ router.put('/updateDestination/:id', async (req, res) => {
 });
 
 // Delete a destination
-router.delete('/removeDestination/:index', authenticateToken, async (req, res) => {
+router.delete('/removeDestination/:id', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { index } = req.params;
+        const { id } = req.params;
 
-        const userWithDestinations = await User.findById(userId);
+        // Find the destination by ID
+        const destination = await Destination.findById(id);
 
-        const destinations = userWithDestinations.destinations;
+        // Check if the destination exists
+        if (!destination) {
+            return res.status(404).json({ error: 'Destination not found' });
+        }
 
-        // Use splice to remove the destination at the specified index
-        destinations.splice(index, 1);
+        // Remove the destination from the database
+        await Destination.findOneAndDelete(id);
 
-        await userWithDestinations.save();
+        const user = await User.findById(userId);
+        user.destinations.pull(id);
+        await user.save();
 
         return res.status(200).json({ message: 'Destination deleted successfully' });
     } catch (error) {

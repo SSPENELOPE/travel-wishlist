@@ -1,37 +1,29 @@
- <div class="loginBackground">
-        <div class="wrapper fadeInDown">
-            <div id="formContent">
-                <div>
-                    <h2 class="text-dark m-2">Welcome to back!</h2>
-                </div>
-                    <form>
-                        <input
-                            type="email"
-                            id="email"
-                            class="fadeIn second"
-                            name="email"
-                            placeholder="email"
-                        ></input>
-                        <input
-                            type="password"
-                            id="password"
-                            class="fadeIn third"
-                            name="password"
-                            placeholder="password"
-                        ></input>
-                      
-                    </form>
-                      <button
-                            type="submit"
-                            class="btn btn-primary fadeIn fourth login-button"
-                            value="Log In"
-                        >Login</button>
-                <div id="formFooter">
-                    <p>Dont have an accout yet?</p>
-                    <a class="underlineHover" href="/signup"><strong>Register Here</strong></Link>
-                </div>
+<div class="loginBackground">
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+            <div>
+                <h1 class="text-dark m-2">Welcome back!</h1>
             </div>
-        </div >
+            <form>
+                <div class="form-group">
+                    <label for="password">Email:</label>
+                    <input type="email" id="email" class="fadeIn second" name="email" placeholder="email" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" class="fadeIn third" name="password"
+                        placeholder="password" />
+                </div>
+
+            </form>
+            <button type="submit" class="btn btn-primary fadeIn fourth login-button">Login
+            </button>
+            <div id="formFooter">
+                <p>Dont have an accout yet?</p>
+                <a class="underlineHover" href="/signup"><strong>Register Here</strong></Link>
+            </div>
+        </div>
     </div>
+</div>
 
 <script src="/js/login.js"></script>

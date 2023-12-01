@@ -25,13 +25,18 @@ async function signup(e) {
             body: JSON.stringify(signupData),
         });
 
-        if (response.ok) {
+        const result = await response.json();
+
+        if (response.status === 200) {
             const result = await response.json();
 
-            // Assuming the server response has a message field
             alert(result.message);
 
             window.location.replace("/login");
+        } else if (response.status === 400) {
+            // User already exist
+            alert(result.message);
+            window.location.replace('/login')
         } else {
             // Handle non-successful response
             alert("Error signing up, please try again later");

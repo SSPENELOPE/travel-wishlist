@@ -2,7 +2,7 @@
     <h1>Vacation Destinations Wishlist</h1>
     <p>Found exciting places to vist on your next vacation. Use the form below to add them to your wishlist</p>
     {{#if logged_in}}
-    <h6 class="text-left">Welcome back {{ user.username }}</h6>
+    <h1 class="text-left">Welcome back {{ user.username }}!</h1>
     {{/if}}
 </header>
 
@@ -45,6 +45,9 @@
 
     <section class="saved-destinations">
         <h3>My Wishlist</h3>
+        <div id="loading-spinner" style="display: none;">
+            Loading...
+        </div>
         <div class="info">
             {{#each destinations index=index}}
             <div class="destination-card card">
@@ -56,8 +59,9 @@
                     <p>{{this.description}}</p>
                 </div>
                 <div class='buttons'>
-                    <button class="edit-btn btn btn-primary">Edit</button>
-                    <button class='remove-btn btn btn-danger' onclick="removeDestination({{index}})">Remove</button>
+                    <button class="edit-btn btn btn-primary" onclick="editDestination('{{this._id}}')">Edit</button>
+                    <button class='remove-btn btn btn-danger'
+                        onclick="removeDestination('{{this._id}}')">Remove</button>
                 </div>
             </div>
             {{/each}}
@@ -68,7 +72,4 @@
         <h1 class="text-center">Please <a href="login">log in</a> to use the features of this page</h1>
     </section>
     {{/if}}
-
-
-    <script src="/js/script.js"></script>
 </div>
