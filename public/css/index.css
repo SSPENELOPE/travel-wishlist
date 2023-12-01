@@ -23,6 +23,12 @@ main {
     width: 70%;
 }
 
+.destinations {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
 
 /* Saved Destinations  */
 .saved-destinations {

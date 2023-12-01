@@ -20,9 +20,11 @@
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2",
     "handlebars": "^4.7.8",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.2",
     "nodemon": "^3.0.1",
     "open": "^9.1.0",
-    "opn": "^6.0.0"
+    "opn": "^6.0.0",
+    "sweetalert": "^2.1.2"
   }
 }

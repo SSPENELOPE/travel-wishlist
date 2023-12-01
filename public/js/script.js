@@ -1,5 +1,3 @@
-// import { getRandomImage, displayDestinations } from "./helper";
-
 // Add a destination
 const addDestination = async (event) => {
     event.preventDefault();
@@ -30,25 +28,25 @@ const addDestination = async (event) => {
 
     try {
         // Make a POST request to your Express server
-        const response = await fetch('http://localhost:3001/api/addDestination', {
+        const response = await fetch('http://localhost:3001/api/destinations/addDestination', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(destinationData),
         });
 
         if (response.ok) {
             document.querySelector('.custom-form').reset(); // Clear the form 
+            window.location.reload(true);
         } else {
             console.error('Failed to add destination'); // Log our error
         }
     } catch (error) {
         console.error('Error:', error);
     }
-
-    displayDestinations();
-}
+};
 
 // Edit a destination
 async function editDestination(destinationData) {
@@ -95,22 +93,37 @@ async function editDestination(destinationData) {
 }
 
 // Remove a destination
-function removeDestination(destinationId) {
-
-    fetch(`http://localhost:3001/api/removeDestination/${destinationId}`, {
+function removeDestination(index) {
+    fetch(`http://localhost:3001/api/destinations/removeDestination/${index}`, {
         method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        credentials: 'include'
     })
-        .then((response) => {
-            if (response.ok) {
-                console.log('Destination deleted successfully');
-                displayDestinations();
-            } else {
-                console.error('Failed to delete destination');
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
+    .then(response => {
+        if (response.ok) {
+            // Update the UI to remove the destination card
+           window.location.reload(true);
+        } else {
+            console.error('Failed to remove destination');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
-window.addEventListener('load', displayDestinations);
+async function logout() {
+    const response = await fetch(`http://localhost:3001/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+    });
+
+    if(response.ok) {
+        window.location.replace('/');
+    }
+}
+
+document.querySelector('.logout-button')
+    .addEventListener("click",() => logout());

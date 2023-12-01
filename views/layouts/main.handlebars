@@ -29,13 +29,19 @@
                     <a class="nav-link  text-light" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link  text-light" href="#">Link</a>
+                    <a class="nav-link  text-light" href="#">Coming soon</a>
                 </li>
             </ul>
             <ul class="navbar-nav">
+                {{#if logged_in}}
                 <li class="nav-item">
-                    <a class="nav-link  text-light" href="/login">Login</a>
+                    <button class="nav-link btn text-light logout-button">Logout</button>
                 </li>
+                {{ else }}
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="/login">Login</a>
+                </li>
+                {{/if}}
             </ul>
         </div>
     </nav>
@@ -44,6 +50,11 @@
     <main>
         {{{ body }}}
     </main>
-</body>
 
+    {{#if logged_in}}
+    <script src="/js/helper.js"></script>
+    <sricpt src="/js/script.js"></sricpt>
+    {{/if}}
+
+</body>
 </html>

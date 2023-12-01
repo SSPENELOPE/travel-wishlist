@@ -1,6 +1,9 @@
 <header class="jumbotron text-center">
     <h1>Vacation Destinations Wishlist</h1>
     <p>Found exciting places to vist on your next vacation. Use the form below to add them to your wishlist</p>
+    {{#if logged_in}}
+    <h6 class="text-left">Welcome back {{ user.username }}</h6>
+    {{/if}}
 </header>
 
 <!-- Form section  -->
@@ -43,19 +46,29 @@
     <section class="saved-destinations">
         <h3>My Wishlist</h3>
         <div class="info">
-
+            {{#each destinations index=index}}
+            <div class="destination-card card">
+                <img class="card-img-top img" src="{{this.photo}}" alt="Destination Photo"
+                    style="max-width: 100%; max-height: 150px;">
+                <div class='p-3 card-body'>
+                    <h5 class="destination">{{this.name}}</h5>
+                    <h6 class="location">{{this.location}}</h6>
+                    <p>{{this.description}}</p>
+                </div>
+                <div class='buttons'>
+                    <button class="edit-btn btn btn-primary">Edit</button>
+                    <button class='remove-btn btn btn-danger' onclick="removeDestination({{index}})">Remove</button>
+                </div>
+            </div>
+            {{/each}}
         </div>
     </section>
-
-    <section>
-        <h1>Please log in to use the features of this page</h1>
-    </section>
-    {{/if}}
-
+    {{ else }}
     <section>
         <h1 class="text-center">Please <a href="login">log in</a> to use the features of this page</h1>
     </section>
-</div>
+    {{/if}}
 
-<script src="/js/helper.js"></script>
-<script src="/js/script.js"></script>
+
+    <script src="/js/script.js"></script>
+</div>

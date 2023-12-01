@@ -1,33 +1,29 @@
 const router = require('express').Router();
-const Destination = require('../../models/destination');
-
-// Get all saved destinations
-router.get('/destinations', async (req, res) => {
-    try {
-        // Use Mongoose's find method to retrieve all destinations
-        const allDestinations = await Destination.find();
-
-        return res.json(allDestinations);
-    } catch (error) {
-        console.error('Error getting destinations:', error);
-        return res.status(500).json({ error: 'Internal server error' });
-    }
-});
+const authenticateToken = require('../../middleware/tokenDecode');
+const User = require('../../models/user');
 
 // Add a destination
-router.post('/addDestination', async (req, res) => {
+router.post('/addDestination', authenticateToken, async (req, res) => {
     try {
         const { name, location, photo, description } = req.body;
 
-        const newDestination = new Destination({
+        const userId = req.user.userId;
+        console.log('User ID:', userId);
+        
+        const newDestination = {
             name,
             location,
             photo,
             description,
-        });
+        };
 
-        await newDestination.save();
-
+        // Find the user and push the newDestination into the destinations array
+        const user = await User.findById(userId);
+        user.destinations.push(newDestination);
+        await user.save();
+        
+        console.log('Saved Destination:', newDestination);
+        
         res.status(201).json({ message: 'Destination added successfully' });
     } catch (error) {
         console.error(error);
@@ -60,16 +56,19 @@ router.put('/updateDestination/:id', async (req, res) => {
 });
 
 // Delete a destination
-router.delete('/removeDestination/:id', async (req, res) => {
+router.delete('/removeDestination/:index', authenticateToken, async (req, res) => {
     try {
-        const { id } = req.params;
+        const userId = req.user.userId;
+        const { index } = req.params;
 
-        // Use Mongoose's findByIdAndDelete to remove the destination by ID
-        const deletedDestination = await Destination.findByIdAndDelete(id);
+        const userWithDestinations = await User.findById(userId);
 
-        if (!deletedDestination) {
-            return res.status(404).json({ error: 'Destination not found' });
-        }
+        const destinations = userWithDestinations.destinations;
+
+        // Use splice to remove the destination at the specified index
+        destinations.splice(index, 1);
+
+        await userWithDestinations.save();
 
         return res.status(200).json({ message: 'Destination deleted successfully' });
     } catch (error) {
