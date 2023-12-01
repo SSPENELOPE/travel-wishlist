@@ -20,10 +20,14 @@ async function login(e) {
             },
             body: JSON.stringify(loginData),
         });
+        const data = await response.json();
 
-        if (response.ok) {
+        if (response.status === 200) {
+            alert(data.message);
             // If the login is successful, redirect or handle as needed
             window.location.replace("/");
+        } else if (response.status === 401) {
+            alert(data.message);
         } else {
             // Handle non-successful response
             const result = await response.json();

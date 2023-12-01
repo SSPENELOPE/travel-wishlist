@@ -7,7 +7,6 @@ const saltRounds = 10;
 router.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
 
-    console.log("signup called")
     try {
         // Check if the user already exists
         const existingUser = await User.findOne({ email });
@@ -42,30 +41,33 @@ router.post('/login', async (req, res) => {
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ message: 'No account found with that email' });
         }
+
+        console.log(email);
+        console.log(password);
 
         // Check if the password is correct
-        const isPasswordValid = bcrypt.compare(password, user.password);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(401).json({ error: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Invalid password' });
+        } else {
+            // If the credentials are valid, generate a JWT
+            const token = jwt.sign({ userId: user._id }, 'your-secret-key', {
+                expiresIn: '1h', // Token expiration time
+            });
+
+            // Set the token in the response cookies
+            res.cookie('token', token, {
+                httpOnly: true,
+                maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+                secure: true, // Enable in production with HTTPS
+            });
+
+            // Send a success message
+            return res.status(200).json({ message: 'Login successful' });
         }
-
-        // If the credentials are valid, generate a JWT
-        const token = jwt.sign({ userId: user._id }, 'your-secret-key', {
-            expiresIn: '1h', // Token expiration time
-        });
-
-        // Set the token in the response cookies
-        res.cookie('token', token, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
-            secure: true, // Enable in production with HTTPS
-        });
-
-        // Send a success message
-        return res.json({ message: 'Login successful', user });
     } catch (error) {
         console.error('Error during login:', error);
         return res.status(500).json({ error: 'Internal server error' });

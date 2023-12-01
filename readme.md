@@ -5,4 +5,4 @@
 
 - Here you can fill out a form of places you'd like to go and they will be saved to your local storage and displayed on the screen
 
-- You can see the sight here https://sspenelope.github.io/travel-wishlist/
+- You can see the sight here https://vacation-dest-wishlist-b121a426f6c5.herokuapp.com/
