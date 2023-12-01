@@ -28,8 +28,7 @@ async function signup(e) {
         const result = await response.json();
 
         if (response.status === 200) {
-            const result = await response.json();
-
+    
             alert(result.message);
 
             window.location.replace("/login");
